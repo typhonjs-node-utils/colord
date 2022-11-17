@@ -99,7 +99,6 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "/dist"
   ],
   "types": "index.d.ts",
   "scripts": {
