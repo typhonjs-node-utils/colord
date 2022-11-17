@@ -27,81 +27,81 @@
   "author": "Vlad Shilov <omgovich@ya.ru>",
   "license": "MIT",
   "sideEffects": false,
-  "main": "./index.js",
-  "module": "./index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.mjs",
-      "require": "./index.js",
-      "default": "./index.mjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.mjs"
     },
     "./plugins/a11y": {
-      "types": "./plugins/a11y.d.ts",
-      "import": "./plugins/a11y.mjs",
-      "require": "./plugins/a11y.js",
-      "default": "./plugins/a11y.mjs"
+      "types": "./dist/plugins/a11y.d.ts",
+      "import": "./dist/plugins/a11y.mjs",
+      "require": "./dist/plugins/a11y.js",
+      "default": "./dist/plugins/a11y.mjs"
     },
     "./plugins/cmyk": {
-      "types": "./plugins/cmyk.d.ts",
-      "import": "./plugins/cmyk.mjs",
-      "require": "./plugins/cmyk.js",
-      "default": "./plugins/cmyk.mjs"
+      "types": "./dist/plugins/cmyk.d.ts",
+      "import": "./dist/plugins/cmyk.mjs",
+      "require": "./dist/plugins/cmyk.js",
+      "default": "./dist/plugins/cmyk.mjs"
     },
     "./plugins/harmonies": {
-      "types": "./plugins/harmonies.d.ts",
-      "import": "./plugins/harmonies.mjs",
-      "require": "./plugins/harmonies.js",
-      "default": "./plugins/harmonies.mjs"
+      "types": "./dist/plugins/harmonies.d.ts",
+      "import": "./dist/plugins/harmonies.mjs",
+      "require": "./dist/plugins/harmonies.js",
+      "default": "./dist/plugins/harmonies.mjs"
     },
     "./plugins/hwb": {
-      "types": "./plugins/hwb.d.ts",
-      "import": "./plugins/hwb.mjs",
-      "require": "./plugins/hwb.js",
-      "default": "./plugins/hwb.mjs"
+      "types": "./dist/plugins/hwb.d.ts",
+      "import": "./dist/plugins/hwb.mjs",
+      "require": "./dist/plugins/hwb.js",
+      "default": "./dist/plugins/hwb.mjs"
     },
     "./plugins/lab": {
-      "types": "./plugins/lab.d.ts",
-      "import": "./plugins/lab.mjs",
-      "require": "./plugins/lab.js",
-      "default": "./plugins/lab.mjs"
+      "types": "./dist/plugins/lab.d.ts",
+      "import": "./dist/plugins/lab.mjs",
+      "require": "./dist/plugins/lab.js",
+      "default": "./dist/plugins/lab.mjs"
     },
     "./plugins/lch": {
-      "types": "./plugins/lch.d.ts",
-      "import": "./plugins/lch.mjs",
-      "require": "./plugins/lch.js",
-      "default": "./plugins/lch.mjs"
+      "types": "./dist/plugins/lch.d.ts",
+      "import": "./dist/plugins/lch.mjs",
+      "require": "./dist/plugins/lch.js",
+      "default": "./dist/plugins/lch.mjs"
     },
     "./plugins/minify": {
-      "types": "./plugins/minify.d.ts",
-      "import": "./plugins/minify.mjs",
-      "require": "./plugins/minify.js",
-      "default": "./plugins/minify.mjs"
+      "types": "./dist/plugins/minify.d.ts",
+      "import": "./dist/plugins/minify.mjs",
+      "require": "./dist/plugins/minify.js",
+      "default": "./dist/plugins/minify.mjs"
     },
     "./plugins/mix": {
-      "types": "./plugins/mix.d.ts",
-      "import": "./plugins/mix.mjs",
-      "require": "./plugins/mix.js",
-      "default": "./plugins/mix.mjs"
+      "types": "./dist/plugins/mix.d.ts",
+      "import": "./dist/plugins/mix.mjs",
+      "require": "./dist/plugins/mix.js",
+      "default": "./dist/plugins/mix.mjs"
     },
     "./plugins/names": {
-      "types": "./plugins/names.d.ts",
-      "import": "./plugins/names.mjs",
-      "require": "./plugins/names.js",
-      "default": "./plugins/names.mjs"
+      "types": "./dist/plugins/names.d.ts",
+      "import": "./dist/plugins/names.mjs",
+      "require": "./dist/plugins/names.js",
+      "default": "./dist/plugins/names.mjs"
     },
     "./plugins/xyz": {
-      "types": "./plugins/xyz.d.ts",
-      "import": "./plugins/xyz.mjs",
-      "require": "./plugins/xyz.js",
-      "default": "./plugins/xyz.mjs"
+      "types": "./dist/plugins/xyz.d.ts",
+      "import": "./dist/plugins/xyz.mjs",
+      "require": "./dist/plugins/xyz.js",
+      "default": "./dist/plugins/xyz.mjs"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "/dist"
   ],
-  "types": "index.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "lint": "eslint src/**/*.ts",
     "size": "npm run build && size-limit",
