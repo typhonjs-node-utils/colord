@@ -32,7 +32,7 @@ export const parseRgbaString = (input: string): RgbaColor | null => {
   });
 };
 
-export const rgbaToRgbaString = (rgba: RgbaColor): string => {
-  const { r, g, b, a } = roundRgba(rgba);
+export const rgbaToRgbaString = (rgba: RgbaColor, digits = 0): string => {
+  const { r, g, b, a } = roundRgba(rgba, digits);
   return a < 1 ? `rgba(${r}, ${g}, ${b}, ${a})` : `rgb(${r}, ${g}, ${b})`;
 };

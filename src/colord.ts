@@ -69,40 +69,40 @@ export class Colord {
    * Converts a color to RGB color space and returns an object.
    * Always includes an alpha value from 0 to 1.
    */
-  public toRgb(): RgbaColor {
-    return roundRgba(this.rgba);
+  public toRgb(digits = 0): RgbaColor {
+    return roundRgba(this.rgba, digits);
   }
 
   /**
    * Converts a color to RGB color space and returns a string representation.
    * Outputs an alpha value only if it is less than 1.
    */
-  public toRgbString(): string {
-    return rgbaToRgbaString(this.rgba);
+  public toRgbString(digits = 0): string {
+    return rgbaToRgbaString(this.rgba, digits);
   }
 
   /**
    * Converts a color to HSL color space and returns an object.
    * Always includes an alpha value from 0 to 1.
    */
-  public toHsl(): HslaColor {
-    return roundHsla(rgbaToHsla(this.rgba));
+  public toHsl(digits = 0): HslaColor {
+    return roundHsla(rgbaToHsla(this.rgba), digits);
   }
 
   /**
    * Converts a color to HSL color space and returns a string representation.
    * Always includes an alpha value from 0 to 1.
    */
-  public toHslString(): string {
-    return rgbaToHslaString(this.rgba);
+  public toHslString(digits = 0): string {
+    return rgbaToHslaString(this.rgba, digits);
   }
 
   /**
    * Converts a color to HSV color space and returns an object.
    * Always includes an alpha value from 0 to 1.
    */
-  public toHsv(): HsvaColor {
-    return roundHsva(rgbaToHsva(this.rgba));
+  public toHsv(digits = 0): HsvaColor {
+    return roundHsva(rgbaToHsva(this.rgba), digits);
   }
 
   /**

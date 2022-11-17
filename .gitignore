@@ -15,7 +15,7 @@ node_modules/
 
 # bundler
 .cache
-dist/
+# dist/ # Temporarily removed for direct release on GH.
 
 # OSX
 .DS_Store

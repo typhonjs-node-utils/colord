@@ -29,7 +29,7 @@ export const parseHslaString = (input: string): RgbaColor | null => {
   return hslaToRgba(hsla);
 };
 
-export const rgbaToHslaString = (rgba: RgbaColor): string => {
-  const { h, s, l, a } = roundHsla(rgbaToHsla(rgba));
+export const rgbaToHslaString = (rgba: RgbaColor, digits = 0): string => {
+  const { h, s, l, a } = roundHsla(rgbaToHsla(rgba), digits);
   return a < 1 ? `hsla(${h}, ${s}%, ${l}%, ${a})` : `hsl(${h}, ${s}%, ${l}%)`;
 };

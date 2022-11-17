@@ -9,11 +9,11 @@ export const clampRgba = (rgba: RgbaColor): RgbaColor => ({
   a: clamp(rgba.a),
 });
 
-export const roundRgba = (rgba: RgbaColor): RgbaColor => ({
-  r: round(rgba.r),
-  g: round(rgba.g),
-  b: round(rgba.b),
-  a: round(rgba.a, ALPHA_PRECISION),
+export const roundRgba = (rgba: RgbaColor, digits = 0): RgbaColor => ({
+  r: round(rgba.r, digits),
+  g: round(rgba.g, digits),
+  b: round(rgba.b, digits),
+  a: round(rgba.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
 });
 
 export const parseRgba = ({ r, g, b, a = 1 }: InputObject): RgbaColor | null => {

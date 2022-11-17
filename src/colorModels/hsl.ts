@@ -10,11 +10,11 @@ export const clampHsla = (hsla: HslaColor): HslaColor => ({
   a: clamp(hsla.a),
 });
 
-export const roundHsla = (hsla: HslaColor): HslaColor => ({
-  h: round(hsla.h),
-  s: round(hsla.s),
-  l: round(hsla.l),
-  a: round(hsla.a, ALPHA_PRECISION),
+export const roundHsla = (hsla: HslaColor, digits = 0): HslaColor => ({
+  h: round(hsla.h, digits),
+  s: round(hsla.s, digits),
+  l: round(hsla.l, digits),
+  a: round(hsla.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
 });
 
 export const parseHsla = ({ h, s, l, a = 1 }: InputObject): RgbaColor | null => {

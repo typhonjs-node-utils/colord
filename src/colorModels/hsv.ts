@@ -9,11 +9,11 @@ export const clampHsva = (hsva: HsvaColor): HsvaColor => ({
   a: clamp(hsva.a),
 });
 
-export const roundHsva = (hsva: HsvaColor): HsvaColor => ({
-  h: round(hsva.h),
-  s: round(hsva.s),
-  v: round(hsva.v),
-  a: round(hsva.a, ALPHA_PRECISION),
+export const roundHsva = (hsva: HsvaColor, digits = 0): HsvaColor => ({
+  h: round(hsva.h, digits),
+  s: round(hsva.s, digits),
+  v: round(hsva.v, digits),
+  a: round(hsva.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
 });
 
 export const parseHsva = ({ h, s, v, a = 1 }: InputObject): RgbaColor | null => {
