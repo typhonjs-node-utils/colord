@@ -4,4 +4,4 @@ import { RgbaColor } from "../types";
  * https://www.w3.org/TR/css-color-4/#device-cmyk
  */
 export declare const parseCmykaString: (input: string) => RgbaColor | null;
-export declare function rgbaToCmykaString(rgb: RgbaColor): string;
+export declare function rgbaToCmykaString(rgb: RgbaColor, digits?: number): string;

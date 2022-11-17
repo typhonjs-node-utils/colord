@@ -10,11 +10,11 @@ export const clampHwba = (hwba: HwbaColor): HwbaColor => ({
   a: clamp(hwba.a),
 });
 
-export const roundHwba = (hwba: HwbaColor): HwbaColor => ({
-  h: round(hwba.h),
-  w: round(hwba.w),
-  b: round(hwba.b),
-  a: round(hwba.a, ALPHA_PRECISION),
+export const roundHwba = (hwba: HwbaColor, digits = 0): HwbaColor => ({
+  h: round(hwba.h, digits),
+  w: round(hwba.w, digits),
+  b: round(hwba.b, digits),
+  a: round(hwba.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
 });
 
 export const rgbaToHwba = (rgba: RgbaColor): HwbaColor => {

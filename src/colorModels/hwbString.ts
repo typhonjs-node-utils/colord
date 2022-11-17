@@ -25,7 +25,7 @@ export const parseHwbaString = (input: string): RgbaColor | null => {
   return hwbaToRgba(hwba);
 };
 
-export const rgbaToHwbaString = (rgba: RgbaColor): string => {
-  const { h, w, b, a } = roundHwba(rgbaToHwba(rgba));
+export const rgbaToHwbaString = (rgba: RgbaColor, digits = 0): string => {
+  const { h, w, b, a } = roundHwba(rgbaToHwba(rgba), digits);
   return a < 1 ? `hwb(${h} ${w}% ${b}% / ${a})` : `hwb(${h} ${w}% ${b}%)`;
 };

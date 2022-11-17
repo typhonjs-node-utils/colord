@@ -21,11 +21,11 @@ export const clampXyza = (xyza: XyzaColor): XyzaColor => ({
   a: clamp(xyza.a),
 });
 
-export const roundXyza = (xyza: XyzaColor): XyzaColor => ({
-  x: round(xyza.x, 2),
-  y: round(xyza.y, 2),
-  z: round(xyza.z, 2),
-  a: round(xyza.a, ALPHA_PRECISION),
+export const roundXyza = (xyza: XyzaColor, digits = 2): XyzaColor => ({
+  x: round(xyza.x, digits),
+  y: round(xyza.y, digits),
+  z: round(xyza.z, digits),
+  a: round(xyza.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
 });
 
 export const parseXyza = ({ x, y, z, a = 1 }: InputObject): RgbaColor | null => {

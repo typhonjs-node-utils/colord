@@ -6,12 +6,12 @@ declare module "../colord" {
          * Converts a color to HWB (Hue-Whiteness-Blackness) color space and returns an object.
          * https://en.wikipedia.org/wiki/HWB_color_model
          */
-        toHwb(): HwbaColor;
+        toHwb(digits?: number): HwbaColor;
         /**
          * Converts a color to HWB (Hue-Whiteness-Blackness) color space and returns a string.
          * https://www.w3.org/TR/css-color-4/#the-hwb-notation
          */
-        toHwbString(): string;
+        toHwbString(digits?: number): string;
     }
 }
 /**

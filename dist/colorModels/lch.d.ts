@@ -5,7 +5,7 @@ import { RgbaColor, InputObject, LchaColor } from "../types";
  * https://lea.verou.me/2020/04/lch-colors-in-css-what-why-and-how/#how-does-lch-work
  */
 export declare const clampLcha: (laba: LchaColor) => LchaColor;
-export declare const roundLcha: (laba: LchaColor) => LchaColor;
+export declare const roundLcha: (laba: LchaColor, digits?: number) => LchaColor;
 export declare const parseLcha: ({ l, c, h, a }: InputObject) => RgbaColor | null;
 /**
  * Performs RGB → CIEXYZ → CIELAB → CIELCH color conversion

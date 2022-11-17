@@ -25,7 +25,7 @@ export const parseLchaString = (input: string): RgbaColor | null => {
   return lchaToRgba(lcha);
 };
 
-export const rgbaToLchaString = (rgba: RgbaColor): string => {
-  const { l, c, h, a } = roundLcha(rgbaToLcha(rgba));
+export const rgbaToLchaString = (rgba: RgbaColor, digits = 2): string => {
+  const { l, c, h, a } = roundLcha(rgbaToLcha(rgba), digits);
   return a < 1 ? `lch(${l}% ${c} ${h} / ${a})` : `lch(${l}% ${c} ${h})`;
 };

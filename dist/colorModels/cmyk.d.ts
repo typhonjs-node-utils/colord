@@ -6,7 +6,7 @@ export declare const clampCmyka: (cmyka: CmykaColor) => CmykaColor;
 /**
  * Rounds the CMYK color object values.
  */
-export declare const roundCmyka: (cmyka: CmykaColor) => CmykaColor;
+export declare const roundCmyka: (cmyka: CmykaColor, digits?: number) => CmykaColor;
 /**
  * Transforms the CMYK color object to RGB.
  * https://www.rapidtables.com/convert/color/cmyk-to-rgb.html

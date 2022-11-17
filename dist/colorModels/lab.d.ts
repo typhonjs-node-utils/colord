@@ -4,7 +4,7 @@ import { RgbaColor, LabaColor, InputObject } from "../types";
  * https://www.w3.org/TR/css-color-4/#specifying-lab-lch
  */
 export declare const clampLaba: (laba: LabaColor) => LabaColor;
-export declare const roundLaba: (laba: LabaColor) => LabaColor;
+export declare const roundLaba: (laba: LabaColor, digits?: number) => LabaColor;
 export declare const parseLaba: ({ l, a, b, alpha }: InputObject) => RgbaColor | null;
 /**
  * Performs RGB → CIEXYZ → LAB color conversion

@@ -7,12 +7,12 @@ declare module "../colord" {
          * https://lea.verou.me/2020/04/lch-colors-in-css-what-why-and-how/
          * https://en.wikipedia.org/wiki/CIELAB_color_space#Cylindrical_model
          */
-        toLch(): LchaColor;
+        toLch(digits?: number): LchaColor;
         /**
          * Converts a color to CIELCH (Lightness-Chroma-Hue) color space and returns a string.
          * https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/lch()
          */
-        toLchString(): string;
+        toLchString(digits?: number): string;
     }
 }
 /**

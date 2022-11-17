@@ -10,12 +10,12 @@ declare module "../colord" {
      * https://drafts.csswg.org/css-color/#cmyk-colors
      * https://lea.verou.me/2009/03/cmyk-colors-in-css-useful-or-useless/
      */
-    toCmyk(): CmykaColor;
+    toCmyk(digits?: number): CmykaColor;
     /**
      * Converts a color to CMYK color space and returns a string.
      * https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/device-cmyk()
      */
-    toCmykString(): string;
+    toCmykString(digits?: number): string;
   }
 }
 
@@ -25,12 +25,12 @@ declare module "../colord" {
  * https://en.wikipedia.org/wiki/CMYK_color_model
  */
 const cmykPlugin: Plugin = (ColordClass, parsers): void => {
-  ColordClass.prototype.toCmyk = function () {
-    return roundCmyka(rgbaToCmyka(this.rgba));
+  ColordClass.prototype.toCmyk = function (digits = 0) {
+    return roundCmyka(rgbaToCmyka(this.rgba), digits);
   };
 
-  ColordClass.prototype.toCmykString = function () {
-    return rgbaToCmykaString(this.rgba);
+  ColordClass.prototype.toCmykString = function (digits = 2) {
+    return rgbaToCmykaString(this.rgba, digits);
   };
 
   parsers.object.push([parseCmyka, "cmyk"]);

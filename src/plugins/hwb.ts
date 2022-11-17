@@ -9,12 +9,12 @@ declare module "../colord" {
      * Converts a color to HWB (Hue-Whiteness-Blackness) color space and returns an object.
      * https://en.wikipedia.org/wiki/HWB_color_model
      */
-    toHwb(): HwbaColor;
+    toHwb(digits?: number): HwbaColor;
     /**
      * Converts a color to HWB (Hue-Whiteness-Blackness) color space and returns a string.
      * https://www.w3.org/TR/css-color-4/#the-hwb-notation
      */
-    toHwbString(): string;
+    toHwbString(digits?: number): string;
   }
 }
 
@@ -24,12 +24,12 @@ declare module "../colord" {
  * https://www.w3.org/TR/css-color-4/#the-hwb-notation
  */
 const hwbPlugin: Plugin = (ColordClass, parsers): void => {
-  ColordClass.prototype.toHwb = function () {
-    return roundHwba(rgbaToHwba(this.rgba));
+  ColordClass.prototype.toHwb = function (digits = 0) {
+    return roundHwba(rgbaToHwba(this.rgba), digits);
   };
 
-  ColordClass.prototype.toHwbString = function () {
-    return rgbaToHwbaString(this.rgba);
+  ColordClass.prototype.toHwbString = function (digits = 0) {
+    return rgbaToHwbaString(this.rgba, digits);
   };
 
   parsers.string.push([parseHwbaString, "hwb"]);

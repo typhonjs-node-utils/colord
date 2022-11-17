@@ -22,11 +22,11 @@ export const clampLaba = (laba: LabaColor): LabaColor => ({
   alpha: clamp(laba.alpha),
 });
 
-export const roundLaba = (laba: LabaColor): LabaColor => ({
-  l: round(laba.l, 2),
-  a: round(laba.a, 2),
-  b: round(laba.b, 2),
-  alpha: round(laba.alpha, ALPHA_PRECISION),
+export const roundLaba = (laba: LabaColor, digits = 2): LabaColor => ({
+  l: round(laba.l, digits),
+  a: round(laba.a, digits),
+  b: round(laba.b, digits),
+  alpha: round(laba.alpha, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
 });
 
 export const parseLaba = ({ l, a, b, alpha = 1 }: InputObject): RgbaColor | null => {

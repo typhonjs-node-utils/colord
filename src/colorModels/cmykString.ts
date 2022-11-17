@@ -23,8 +23,8 @@ export const parseCmykaString = (input: string): RgbaColor | null => {
   return cmykaToRgba(cmyka);
 };
 
-export function rgbaToCmykaString(rgb: RgbaColor): string {
-  const { c, m, y, k, a } = roundCmyka(rgbaToCmyka(rgb));
+export function rgbaToCmykaString(rgb: RgbaColor, digits = 2): string {
+  const { c, m, y, k, a } = roundCmyka(rgbaToCmyka(rgb), digits);
 
   return a < 1
     ? `device-cmyk(${c}% ${m}% ${y}% ${k}% / ${a})`

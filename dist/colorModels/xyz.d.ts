@@ -8,7 +8,7 @@ export declare const D50: {
  * Limits XYZ axis values assuming XYZ is relative to D50.
  */
 export declare const clampXyza: (xyza: XyzaColor) => XyzaColor;
-export declare const roundXyza: (xyza: XyzaColor) => XyzaColor;
+export declare const roundXyza: (xyza: XyzaColor, digits?: number) => XyzaColor;
 export declare const parseXyza: ({ x, y, z, a }: InputObject) => RgbaColor | null;
 /**
  * Performs Bradford chromatic adaptation from D65 to D50

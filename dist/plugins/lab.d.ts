@@ -6,7 +6,7 @@ declare module "../colord" {
          * Converts a color to CIELAB color space and returns an object.
          * The object always includes `alpha` value [0, 1].
          */
-        toLab(): LabaColor;
+        toLab(digits?: number): LabaColor;
         /**
          * Calculates the perceived color difference for two colors according to
          * [Delta E2000](https://en.wikipedia.org/wiki/Color_difference#CIEDE2000).

@@ -7,12 +7,12 @@ declare module "../colord" {
          * https://drafts.csswg.org/css-color/#cmyk-colors
          * https://lea.verou.me/2009/03/cmyk-colors-in-css-useful-or-useless/
          */
-        toCmyk(): CmykaColor;
+        toCmyk(digits?: number): CmykaColor;
         /**
          * Converts a color to CMYK color space and returns a string.
          * https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/device-cmyk()
          */
-        toCmykString(): string;
+        toCmykString(digits?: number): string;
     }
 }
 /**

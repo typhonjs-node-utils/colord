@@ -4,4 +4,4 @@ import { RgbaColor } from "../types";
  * https://www.w3.org/TR/css-color-4/#specifying-lab-lch
  */
 export declare const parseLchaString: (input: string) => RgbaColor | null;
-export declare const rgbaToLchaString: (rgba: RgbaColor) => string;
+export declare const rgbaToLchaString: (rgba: RgbaColor, digits?: number) => string;

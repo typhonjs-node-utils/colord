@@ -4,7 +4,7 @@ import { parseXyza, rgbaToXyza, roundXyza } from "../colorModels/xyz";
 
 declare module "../colord" {
   interface Colord {
-    toXyz(): XyzaColor;
+    toXyz(digits?: number): XyzaColor;
   }
 }
 
@@ -14,8 +14,8 @@ declare module "../colord" {
  * Helpful article: https://www.sttmedia.com/colormodel-xyz
  */
 const xyzPlugin: Plugin = (ColordClass, parsers): void => {
-  ColordClass.prototype.toXyz = function () {
-    return roundXyza(rgbaToXyza(this.rgba));
+  ColordClass.prototype.toXyz = function (digits = 2) {
+    return roundXyza(rgbaToXyza(this.rgba), digits);
   };
 
   parsers.object.push([parseXyza, "xyz"]);
