@@ -43,7 +43,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: `./types/index-bundled.d.ts`,
+      file: `./dist/index-bundled.d.ts`,
       format: 'es',
       generatedCode: { constBindings: true },
       sourcemap: false

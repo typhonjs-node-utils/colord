@@ -76,8 +76,7 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "/dist",
-    "/types"
+    "/dist"
   ],
   "scripts": {
     "lint": "eslint src/**/*.ts",
