@@ -1,1 +1,520 @@
-Object.defineProperty(exports,"__esModule",{value:!0});var r={grad:.9,turn:360,rad:360/(2*Math.PI)},t=function(r){return"string"==typeof r?r.length>0:"number"==typeof r},n=function(r,t,n){return void 0===t&&(t=0),void 0===n&&(n=Math.pow(10,t)),Math.round(n*r)/n+0},o=function(r,t,n){return void 0===t&&(t=0),void 0===n&&(n=1),r>n?n:r>t?r:t},e=function(r){return(r=isFinite(r)?r%360:0)>0?r:r+360},u=function(r){return{r:o(r.r,0,255),g:o(r.g,0,255),b:o(r.b,0,255),a:o(r.a)}},a=function(r,t){return void 0===t&&(t=0),{r:n(r.r,t),g:n(r.g,t),b:n(r.b,t),a:n(r.a,3>t?3:t)}},i=/^#([0-9a-f]{3,8})$/i,s=function(r){var t=r.toString(16);return t.length<2?"0"+t:t},c=function(r){var t=r.r,n=r.g,o=r.b,e=r.a,u=Math.max(t,n,o),a=u-Math.min(t,n,o),i=a?u===t?(n-o)/a:u===n?2+(o-t)/a:4+(t-n)/a:0;return{h:60*(i<0?i+6:i),s:u?a/u*100:0,v:u/255*100,a:e}},d=function(r){var t=r.h,n=r.s,o=r.v,e=r.a;t=t/360*6,n/=100,o/=100;var u=Math.floor(t),a=o*(1-n),i=o*(1-(t-u)*n),s=o*(1-(1-t+u)*n),c=u%6;return{r:255*[o,i,a,a,s,o][c],g:255*[s,o,o,i,a,a][c],b:255*[a,a,s,o,o,i][c],a:e}},h=function(r){return{h:e(r.h),s:o(r.s,0,100),l:o(r.l,0,100),a:o(r.a)}},b=function(r,t){return void 0===t&&(t=0),{h:n(r.h,t),s:n(r.s,t),l:n(r.l,t),a:n(r.a,3>t?3:t)}},g=function(r){return d((n=(t=r).s,{h:t.h,s:(n*=((o=t.l)<50?o:100-o)/100)>0?2*n/(o+n)*100:0,v:o+n,a:t.a}));var t,n,o},f=function(r){return{h:(t=c(r)).h,s:(e=(200-(n=t.s))*(o=t.v)/100)>0&&e<200?n*o/100/(e<=100?e:200-e)*100:0,l:e/2,a:t.a};var t,n,o,e},p=/^hsla?\(\s*([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s*,\s*([+-]?\d*\.?\d+)%\s*,\s*([+-]?\d*\.?\d+)%\s*(?:,\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i,v=/^hsla?\(\s*([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s+([+-]?\d*\.?\d+)%\s+([+-]?\d*\.?\d+)%\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i,l=/^rgba?\(\s*([+-]?\d*\.?\d+)(%)?\s*,\s*([+-]?\d*\.?\d+)(%)?\s*,\s*([+-]?\d*\.?\d+)(%)?\s*(?:,\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i,m=/^rgba?\(\s*([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i,y={string:[[function(r){var t=i.exec(r);return t?(r=t[1]).length<=4?{r:parseInt(r[0]+r[0],16),g:parseInt(r[1]+r[1],16),b:parseInt(r[2]+r[2],16),a:4===r.length?n(parseInt(r[3]+r[3],16)/255,2):1}:6===r.length||8===r.length?{r:parseInt(r.substr(0,2),16),g:parseInt(r.substr(2,2),16),b:parseInt(r.substr(4,2),16),a:8===r.length?n(parseInt(r.substr(6,2),16)/255,2):1}:null:null},"hex"],[function(r){var t=l.exec(r)||m.exec(r);return t?t[2]!==t[4]||t[4]!==t[6]?null:u({r:Number(t[1])/(t[2]?100/255:1),g:Number(t[3])/(t[4]?100/255:1),b:Number(t[5])/(t[6]?100/255:1),a:void 0===t[7]?1:Number(t[7])/(t[8]?100:1)}):null},"rgb"],[function(t){var n=p.exec(t)||v.exec(t);if(!n)return null;var o,e,u=h({h:(o=n[1],e=n[2],void 0===e&&(e="deg"),Number(o)*(r[e]||1)),s:Number(n[3]),l:Number(n[4]),a:void 0===n[5]?1:Number(n[5])/(n[6]?100:1)});return g(u)},"hsl"]],object:[[function(r){var n=r.r,o=r.g,e=r.b,a=r.a,i=void 0===a?1:a;return t(n)&&t(o)&&t(e)?u({r:Number(n),g:Number(o),b:Number(e),a:Number(i)}):null},"rgb"],[function(r){var n=r.h,o=r.s,e=r.l,u=r.a,a=void 0===u?1:u;if(!t(n)||!t(o)||!t(e))return null;var i=h({h:Number(n),s:Number(o),l:Number(e),a:Number(a)});return g(i)},"hsl"],[function(r){var n=r.h,u=r.s,a=r.v,i=r.a,s=void 0===i?1:i;if(!t(n)||!t(u)||!t(a))return null;var c=function(r){return{h:e(r.h),s:o(r.s,0,100),v:o(r.v,0,100),a:o(r.a)}}({h:Number(n),s:Number(u),v:Number(a),a:Number(s)});return d(c)},"hsv"]]},N=function(r,t){for(var n=0;n<t.length;n++){var o=t[n][0](r);if(o)return[o,t[n][1]]}return[null,void 0]},x=function(r){return"string"==typeof r?N(r.trim(),y.string):"object"==typeof r&&null!==r?N(r,y.object):[null,void 0]},M=function(r,t){var n=f(r);return{h:n.h,s:o(n.s+100*t,0,100),l:n.l,a:n.a}},I=function(r){return(299*r.r+587*r.g+114*r.b)/1e3/255},H=function(r,t){var n=f(r);return{h:n.h,s:n.s,l:o(n.l+100*t,0,100),a:n.a}},$=function(){function r(r){this.parsed=x(r)[0],this.rgba=this.parsed||{r:0,g:0,b:0,a:1}}return r.prototype.isValid=function(){return null!==this.parsed},r.prototype.brightness=function(){return n(I(this.rgba),2)},r.prototype.isDark=function(){return I(this.rgba)<.5},r.prototype.isLight=function(){return I(this.rgba)>=.5},r.prototype.toHex=function(){return r=a(this.rgba),t=r.r,o=r.g,e=r.b,i=(u=r.a)<1?s(n(255*u)):"","#"+s(t)+s(o)+s(e)+i;var r,t,o,e,u,i},r.prototype.toRgb=function(r){return void 0===r&&(r=0),a(this.rgba,r)},r.prototype.toRgbString=function(r){return void 0===r&&(r=0),function(r,t){void 0===t&&(t=0);var n=a(r,t),o=n.r,e=n.g,u=n.b,i=n.a;return i<1?"rgba(".concat(o,", ").concat(e,", ").concat(u,", ").concat(i,")"):"rgb(".concat(o,", ").concat(e,", ").concat(u,")")}(this.rgba,r)},r.prototype.toHsl=function(r){return void 0===r&&(r=0),b(f(this.rgba),r)},r.prototype.toHslString=function(r){return void 0===r&&(r=0),function(r,t){void 0===t&&(t=0);var n=b(f(r),t),o=n.h,e=n.s,u=n.l,a=n.a;return a<1?"hsla(".concat(o,", ").concat(e,"%, ").concat(u,"%, ").concat(a,")"):"hsl(".concat(o,", ").concat(e,"%, ").concat(u,"%)")}(this.rgba,r)},r.prototype.toHsv=function(r){return void 0===r&&(r=0),function(r,t){return void 0===t&&(t=0),{h:n(r.h,t),s:n(r.s,t),v:n(r.v,t),a:n(r.a,3>t?3:t)}}(c(this.rgba),r)},r.prototype.invert=function(){return j({r:255-(r=this.rgba).r,g:255-r.g,b:255-r.b,a:r.a});var r},r.prototype.saturate=function(r){return void 0===r&&(r=.1),j(M(this.rgba,r))},r.prototype.desaturate=function(r){return void 0===r&&(r=.1),j(M(this.rgba,-r))},r.prototype.grayscale=function(){return j(M(this.rgba,-1))},r.prototype.lighten=function(r){return void 0===r&&(r=.1),j(H(this.rgba,r))},r.prototype.darken=function(r){return void 0===r&&(r=.1),j(H(this.rgba,-r))},r.prototype.rotate=function(r){return void 0===r&&(r=15),this.hue(this.hue()+r)},r.prototype.alpha=function(r){return"number"==typeof r?j({r:(t=this.rgba).r,g:t.g,b:t.b,a:r}):n(this.rgba.a,3);var t},r.prototype.hue=function(r){var t=f(this.rgba);return"number"==typeof r?j({h:r,s:t.s,l:t.l,a:t.a}):n(t.h)},r.prototype.isEqual=function(r){return this.toHex()===j(r).toHex()},r}(),j=function(r){return r instanceof $?r:new $(r)},w=[];exports.Colord=$,exports.colord=j,exports.extend=function(r){r.forEach(function(r){w.indexOf(r)<0&&(r($,y),w.push(r))})},exports.getFormat=function(r){return x(r)[1]},exports.random=function(){return new $({r:255*Math.random(),g:255*Math.random(),b:255*Math.random()})};
+/**
+ * We used to work with 2 digits after the decimal point, but it wasn't accurate enough,
+ * so the library produced colors that were perceived differently.
+ */
+const ALPHA_PRECISION = 3;
+/**
+ * Valid CSS <angle> units.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/angle
+ */
+const ANGLE_UNITS = {
+    grad: 360 / 400,
+    turn: 360,
+    rad: 360 / (Math.PI * 2),
+};
+
+const isPresent = (value) => {
+    if (typeof value === "string")
+        return value.length > 0;
+    if (typeof value === "number")
+        return true;
+    return false;
+};
+const round = (number, digits = 0, base = Math.pow(10, digits)) => {
+    return Math.round(base * number) / base + 0;
+};
+/**
+ * Clamps a value between an upper and lower bound.
+ * We use ternary operators because it makes the minified code
+ * is 2 times shorter then `Math.min(Math.max(a,b),c)`
+ * NaN is clamped to the lower bound
+ */
+const clamp = (number, min = 0, max = 1) => {
+    return number > max ? max : number > min ? number : min;
+};
+/**
+ * Processes and clamps a degree (angle) value properly.
+ * Any `NaN` or `Infinity` will be converted to `0`.
+ * Examples: -1 => 359, 361 => 1
+ */
+const clampHue = (degrees) => {
+    degrees = isFinite(degrees) ? degrees % 360 : 0;
+    return degrees > 0 ? degrees : degrees + 360;
+};
+/**
+ * Converts a hue value to degrees from 0 to 360 inclusive.
+ */
+const parseHue = (value, unit = "deg") => {
+    return Number(value) * (ANGLE_UNITS[unit] || 1);
+};
+
+const clampRgba = (rgba) => ({
+    r: clamp(rgba.r, 0, 255),
+    g: clamp(rgba.g, 0, 255),
+    b: clamp(rgba.b, 0, 255),
+    a: clamp(rgba.a),
+});
+const roundRgba = (rgba, digits = 0) => ({
+    r: round(rgba.r, digits),
+    g: round(rgba.g, digits),
+    b: round(rgba.b, digits),
+    a: round(rgba.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
+});
+const parseRgba = ({ r, g, b, a = 1 }) => {
+    if (!isPresent(r) || !isPresent(g) || !isPresent(b))
+        return null;
+    return clampRgba({
+        r: Number(r),
+        g: Number(g),
+        b: Number(b),
+        a: Number(a),
+    });
+};
+
+const hexMatcher = /^#([0-9a-f]{3,8})$/i;
+/** Parses any valid Hex3, Hex4, Hex6 or Hex8 string and converts it to an RGBA object */
+const parseHex = (hex) => {
+    const hexMatch = hexMatcher.exec(hex);
+    if (!hexMatch)
+        return null;
+    hex = hexMatch[1];
+    if (hex.length <= 4) {
+        return {
+            r: parseInt(hex[0] + hex[0], 16),
+            g: parseInt(hex[1] + hex[1], 16),
+            b: parseInt(hex[2] + hex[2], 16),
+            a: hex.length === 4 ? round(parseInt(hex[3] + hex[3], 16) / 255, 2) : 1,
+        };
+    }
+    if (hex.length === 6 || hex.length === 8) {
+        return {
+            r: parseInt(hex.substr(0, 2), 16),
+            g: parseInt(hex.substr(2, 2), 16),
+            b: parseInt(hex.substr(4, 2), 16),
+            a: hex.length === 8 ? round(parseInt(hex.substr(6, 2), 16) / 255, 2) : 1,
+        };
+    }
+    return null;
+};
+/** Formats any decimal number (e.g. 128) as a hexadecimal string (e.g. "08") */
+const format = (number) => {
+    const hex = number.toString(16);
+    return hex.length < 2 ? "0" + hex : hex;
+};
+/** Converts RGBA object to Hex6 or (if it has alpha channel) Hex8 string */
+const rgbaToHex = (rgba) => {
+    const { r, g, b, a } = roundRgba(rgba);
+    const alphaHex = a < 1 ? format(round(a * 255)) : "";
+    return "#" + format(r) + format(g) + format(b) + alphaHex;
+};
+
+const clampHsva = (hsva) => ({
+    h: clampHue(hsva.h),
+    s: clamp(hsva.s, 0, 100),
+    v: clamp(hsva.v, 0, 100),
+    a: clamp(hsva.a),
+});
+const roundHsva = (hsva, digits = 0) => ({
+    h: round(hsva.h, digits),
+    s: round(hsva.s, digits),
+    v: round(hsva.v, digits),
+    a: round(hsva.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
+});
+const parseHsva = ({ h, s, v, a = 1 }) => {
+    if (!isPresent(h) || !isPresent(s) || !isPresent(v))
+        return null;
+    const hsva = clampHsva({
+        h: Number(h),
+        s: Number(s),
+        v: Number(v),
+        a: Number(a),
+    });
+    return hsvaToRgba(hsva);
+};
+const rgbaToHsva = ({ r, g, b, a }) => {
+    const max = Math.max(r, g, b);
+    const delta = max - Math.min(r, g, b);
+    const hh = delta
+        ? max === r
+            ? (g - b) / delta
+            : max === g
+                ? 2 + (b - r) / delta
+                : 4 + (r - g) / delta
+        : 0;
+    return {
+        h: 60 * (hh < 0 ? hh + 6 : hh),
+        s: max ? (delta / max) * 100 : 0,
+        v: (max / 255) * 100,
+        a,
+    };
+};
+const hsvaToRgba = ({ h, s, v, a }) => {
+    h = (h / 360) * 6;
+    s = s / 100;
+    v = v / 100;
+    const hh = Math.floor(h), b = v * (1 - s), c = v * (1 - (h - hh) * s), d = v * (1 - (1 - h + hh) * s), module = hh % 6;
+    return {
+        r: [v, c, b, b, d, v][module] * 255,
+        g: [d, v, v, c, b, b][module] * 255,
+        b: [b, b, d, v, v, c][module] * 255,
+        a: a,
+    };
+};
+
+const clampHsla = (hsla) => ({
+    h: clampHue(hsla.h),
+    s: clamp(hsla.s, 0, 100),
+    l: clamp(hsla.l, 0, 100),
+    a: clamp(hsla.a),
+});
+const roundHsla = (hsla, digits = 0) => ({
+    h: round(hsla.h, digits),
+    s: round(hsla.s, digits),
+    l: round(hsla.l, digits),
+    a: round(hsla.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
+});
+const parseHsla = ({ h, s, l, a = 1 }) => {
+    if (!isPresent(h) || !isPresent(s) || !isPresent(l))
+        return null;
+    const hsla = clampHsla({
+        h: Number(h),
+        s: Number(s),
+        l: Number(l),
+        a: Number(a),
+    });
+    return hslaToRgba(hsla);
+};
+const hslaToHsva = ({ h, s, l, a }) => {
+    s *= (l < 50 ? l : 100 - l) / 100;
+    return {
+        h: h,
+        s: s > 0 ? ((2 * s) / (l + s)) * 100 : 0,
+        v: l + s,
+        a,
+    };
+};
+const hsvaToHsla = ({ h, s, v, a }) => {
+    const hh = ((200 - s) * v) / 100;
+    return {
+        h,
+        s: hh > 0 && hh < 200 ? ((s * v) / 100 / (hh <= 100 ? hh : 200 - hh)) * 100 : 0,
+        l: hh / 2,
+        a,
+    };
+};
+const hslaToRgba = (hsla) => {
+    return hsvaToRgba(hslaToHsva(hsla));
+};
+const rgbaToHsla = (rgba) => {
+    return hsvaToHsla(rgbaToHsva(rgba));
+};
+
+// Functional syntax
+// hsl( <hue>, <percentage>, <percentage>, <alpha-value>? )
+const commaHslaMatcher = /^hsla?\(\s*([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s*,\s*([+-]?\d*\.?\d+)%\s*,\s*([+-]?\d*\.?\d+)%\s*(?:,\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+// Whitespace syntax
+// hsl( <hue> <percentage> <percentage> [ / <alpha-value> ]? )
+const spaceHslaMatcher = /^hsla?\(\s*([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s+([+-]?\d*\.?\d+)%\s+([+-]?\d*\.?\d+)%\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+/**
+ * Parses a valid HSL[A] CSS color function/string
+ * https://www.w3.org/TR/css-color-4/#the-hsl-notation
+ */
+const parseHslaString = (input) => {
+    const match = commaHslaMatcher.exec(input) || spaceHslaMatcher.exec(input);
+    if (!match)
+        return null;
+    const hsla = clampHsla({
+        h: parseHue(match[1], match[2]),
+        s: Number(match[3]),
+        l: Number(match[4]),
+        a: match[5] === undefined ? 1 : Number(match[5]) / (match[6] ? 100 : 1),
+    });
+    return hslaToRgba(hsla);
+};
+const rgbaToHslaString = (rgba, digits = 0) => {
+    const { h, s, l, a } = roundHsla(rgbaToHsla(rgba), digits);
+    return a < 1 ? `hsla(${h}, ${s}%, ${l}%, ${a})` : `hsl(${h}, ${s}%, ${l}%)`;
+};
+
+// Functional syntax
+// rgb( <percentage>#{3} , <alpha-value>? )
+// rgb( <number>#{3} , <alpha-value>? )
+const commaRgbaMatcher = /^rgba?\(\s*([+-]?\d*\.?\d+)(%)?\s*,\s*([+-]?\d*\.?\d+)(%)?\s*,\s*([+-]?\d*\.?\d+)(%)?\s*(?:,\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+// Whitespace syntax
+// rgb( <percentage>{3} [ / <alpha-value> ]? )
+// rgb( <number>{3} [ / <alpha-value> ]? )
+const spaceRgbaMatcher = /^rgba?\(\s*([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+/**
+ * Parses a valid RGB[A] CSS color function/string
+ * https://www.w3.org/TR/css-color-4/#rgb-functions
+ */
+const parseRgbaString = (input) => {
+    const match = commaRgbaMatcher.exec(input) || spaceRgbaMatcher.exec(input);
+    if (!match)
+        return null;
+    // Mixing numbers and percentages is not allowed
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#rgb_syntax_variations
+    if (match[2] !== match[4] || match[4] !== match[6])
+        return null;
+    return clampRgba({
+        r: Number(match[1]) / (match[2] ? 100 / 255 : 1),
+        g: Number(match[3]) / (match[4] ? 100 / 255 : 1),
+        b: Number(match[5]) / (match[6] ? 100 / 255 : 1),
+        a: match[7] === undefined ? 1 : Number(match[7]) / (match[8] ? 100 : 1),
+    });
+};
+const rgbaToRgbaString = (rgba, digits = 0) => {
+    const { r, g, b, a } = roundRgba(rgba, digits);
+    return a < 1 ? `rgba(${r}, ${g}, ${b}, ${a})` : `rgb(${r}, ${g}, ${b})`;
+};
+
+// The built-in input parsing functions.
+// We use array instead of object to keep the bundle size lighter.
+const parsers = {
+    string: [
+        [parseHex, "hex"],
+        [parseRgbaString, "rgb"],
+        [parseHslaString, "hsl"],
+    ],
+    object: [
+        [parseRgba, "rgb"],
+        [parseHsla, "hsl"],
+        [parseHsva, "hsv"],
+    ],
+};
+const findValidColor = (input, parsers) => {
+    for (let index = 0; index < parsers.length; index++) {
+        const result = parsers[index][0](input);
+        if (result)
+            return [result, parsers[index][1]];
+    }
+    return [null, undefined];
+};
+/** Tries to convert an incoming value into RGBA color by going through all color model parsers */
+const parse = (input) => {
+    if (typeof input === "string") {
+        return findValidColor(input.trim(), parsers.string);
+    }
+    // Don't forget that the type of `null` is "object" in JavaScript
+    // https://bitsofco.de/javascript-typeof/
+    if (typeof input === "object" && input !== null) {
+        return findValidColor(input, parsers.object);
+    }
+    return [null, undefined];
+};
+/**
+ * Returns a color model name for the input passed to the function.
+ */
+const getFormat = (input) => parse(input)[1];
+
+const changeAlpha = (rgba, a) => ({
+    r: rgba.r,
+    g: rgba.g,
+    b: rgba.b,
+    a,
+});
+
+const saturate = (rgba, amount) => {
+    const hsla = rgbaToHsla(rgba);
+    return {
+        h: hsla.h,
+        s: clamp(hsla.s + amount * 100, 0, 100),
+        l: hsla.l,
+        a: hsla.a,
+    };
+};
+
+/**
+ * Returns the brightness of a color [0-1].
+ * https://www.w3.org/TR/AERT/#color-contrast
+ * https://en.wikipedia.org/wiki/YIQ
+ */
+const getBrightness = (rgba) => {
+    return (rgba.r * 299 + rgba.g * 587 + rgba.b * 114) / 1000 / 255;
+};
+
+const lighten = (rgba, amount) => {
+    const hsla = rgbaToHsla(rgba);
+    return {
+        h: hsla.h,
+        s: hsla.s,
+        l: clamp(hsla.l + amount * 100, 0, 100),
+        a: hsla.a,
+    };
+};
+
+const invert = (rgba) => ({
+    r: 255 - rgba.r,
+    g: 255 - rgba.g,
+    b: 255 - rgba.b,
+    a: rgba.a,
+});
+
+class Colord {
+    parsed;
+    rgba;
+    constructor(input) {
+        // Internal color format is RGBA object.
+        // We do not round the internal RGBA numbers for better conversion accuracy.
+        this.parsed = parse(input)[0];
+        this.rgba = this.parsed || { r: 0, g: 0, b: 0, a: 1 };
+    }
+    /**
+     * Returns a boolean indicating whether or not an input has been parsed successfully.
+     * Note: If parsing is unsuccessful, Colord defaults to black (does not throws an error).
+     */
+    isValid() {
+        return this.parsed !== null;
+    }
+    /**
+     * Returns the brightness of a color (from 0 to 1).
+     * The calculation logic is modified from WCAG.
+     * https://www.w3.org/TR/AERT/#color-contrast
+     */
+    brightness() {
+        return round(getBrightness(this.rgba), 2);
+    }
+    /**
+     * Same as calling `brightness() < 0.5`.
+     */
+    isDark() {
+        return getBrightness(this.rgba) < 0.5;
+    }
+    /**
+     * Same as calling `brightness() >= 0.5`.
+     * */
+    isLight() {
+        return getBrightness(this.rgba) >= 0.5;
+    }
+    /**
+     * Returns the hexadecimal representation of a color.
+     * When the alpha channel value of the color is less than 1,
+     * it outputs #rrggbbaa format instead of #rrggbb.
+     */
+    toHex() {
+        return rgbaToHex(this.rgba);
+    }
+    /**
+     * Converts a color to RGB color space and returns an object.
+     * Always includes an alpha value from 0 to 1.
+     */
+    toRgb(digits = 0) {
+        return roundRgba(this.rgba, digits);
+    }
+    /**
+     * Converts a color to RGB color space and returns a string representation.
+     * Outputs an alpha value only if it is less than 1.
+     */
+    toRgbString(digits = 0) {
+        return rgbaToRgbaString(this.rgba, digits);
+    }
+    /**
+     * Converts a color to HSL color space and returns an object.
+     * Always includes an alpha value from 0 to 1.
+     */
+    toHsl(digits = 0) {
+        return roundHsla(rgbaToHsla(this.rgba), digits);
+    }
+    /**
+     * Converts a color to HSL color space and returns a string representation.
+     * Always includes an alpha value from 0 to 1.
+     */
+    toHslString(digits = 0) {
+        return rgbaToHslaString(this.rgba, digits);
+    }
+    /**
+     * Converts a color to HSV color space and returns an object.
+     * Always includes an alpha value from 0 to 1.
+     */
+    toHsv(digits = 0) {
+        return roundHsva(rgbaToHsva(this.rgba), digits);
+    }
+    /**
+     * Creates a new instance containing an inverted (opposite) version of the color.
+     */
+    invert() {
+        return colord(invert(this.rgba));
+    }
+    /**
+     * Increases the HSL saturation of a color by the given amount.
+     */
+    saturate(amount = 0.1) {
+        return colord(saturate(this.rgba, amount));
+    }
+    /**
+     * Decreases the HSL saturation of a color by the given amount.
+     */
+    desaturate(amount = 0.1) {
+        return colord(saturate(this.rgba, -amount));
+    }
+    /**
+     * Makes a gray color with the same lightness as a source color.
+     */
+    grayscale() {
+        return colord(saturate(this.rgba, -1));
+    }
+    /**
+     * Increases the HSL lightness of a color by the given amount.
+     */
+    lighten(amount = 0.1) {
+        return colord(lighten(this.rgba, amount));
+    }
+    /**
+     * Increases the HSL lightness of a color by the given amount.
+     */
+    darken(amount = 0.1) {
+        return colord(lighten(this.rgba, -amount));
+    }
+    /**
+     * Changes the HSL hue of a color by the given amount.
+     */
+    rotate(amount = 15) {
+        return this.hue(this.hue() + amount);
+    }
+    alpha(value) {
+        if (typeof value === "number")
+            return colord(changeAlpha(this.rgba, value));
+        return round(this.rgba.a, ALPHA_PRECISION);
+    }
+    hue(value) {
+        const hsla = rgbaToHsla(this.rgba);
+        if (typeof value === "number")
+            return colord({ h: value, s: hsla.s, l: hsla.l, a: hsla.a });
+        return round(hsla.h);
+    }
+    /**
+     * Determines whether two values are the same color.
+     */
+    isEqual(color) {
+        return this.toHex() === colord(color).toHex();
+    }
+}
+/**
+ * Parses the given input color and creates a new `Colord` instance.
+ * See accepted input formats: https://github.com/omgovich/colord#color-parsing
+ */
+const colord = (input) => {
+    if (input instanceof Colord)
+        return input;
+    return new Colord(input);
+};
+
+const activePlugins = [];
+const extend = (plugins) => {
+    plugins.forEach((plugin) => {
+        if (activePlugins.indexOf(plugin) < 0) {
+            plugin(Colord, parsers);
+            activePlugins.push(plugin);
+        }
+    });
+};
+
+const random = () => {
+    return new Colord({
+        r: Math.random() * 255,
+        g: Math.random() * 255,
+        b: Math.random() * 255,
+    });
+};
+
+export { Colord, colord, extend, getFormat, random };

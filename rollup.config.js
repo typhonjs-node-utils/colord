@@ -1,20 +1,11 @@
-import path from "path";
-import glob from "glob";
-import typescript from "rollup-plugin-typescript2";
-import { terser } from "rollup-plugin-terser";
+import path       from "node:path";
+import glob       from "glob";
+import typescript from "@rollup/plugin-typescript";
+import dts        from 'rollup-plugin-dts';
 
 const getRollupPluginsConfig = (compilerOptions) => {
   return [
-    typescript({
-      tsconfigOverride: { compilerOptions },
-    }),
-    terser({
-      ecma: 5,
-      module: true,
-      toplevel: true,
-      compress: { pure_getters: true },
-      format: { wrap_func_args: false },
-    }),
+    typescript({ ...compilerOptions })
   ];
 };
 
@@ -28,38 +19,37 @@ export default [
   {
     input: "src/index.ts",
     output: {
-      file: "dist/index.mjs",
+      file: "dist/index.js",
       format: "es",
+      generatedCode: { constBindings: true }
     },
     plugins: getRollupPluginsConfig({ declaration: true }),
-  },
-  {
-    input: "src/index.ts",
-    output: {
-      file: "dist/index.js",
-      format: "cjs",
-    },
-    plugins: getRollupPluginsConfig({ declaration: false }),
   },
 
   // Bundle all library plugins as ESM modules
   ...colordPluginPaths.map((input) => ({
     input,
-    output: {
-      file: `dist/plugins/${path.parse(input).name}.mjs`,
-      format: "es",
-    },
-    plugins: getRollupPluginsConfig({ declaration: false }),
-  })),
-
-  // Bundle all library plugins as CommonJS modules
-  ...colordPluginPaths.map((input) => ({
-    input,
+    // external: ['colord'],
     output: {
       file: `dist/plugins/${path.parse(input).name}.js`,
-      format: "cjs",
-      exports: "default",
+      format: "es",
+      generatedCode: { constBindings: true }
     },
-    plugins: getRollupPluginsConfig({ declaration: false }),
+    plugins: getRollupPluginsConfig({ declaration: true }),
   })),
+
+  // Bundle types ----------------------------------------------------------------------------------------------------
+
+  {
+    input: 'src/index.ts',
+    output: {
+      file: `./types/index-bundled.d.ts`,
+      format: 'es',
+      generatedCode: { constBindings: true },
+      sourcemap: false
+    },
+    plugins: [
+      dts()
+    ]
+  }
 ];

@@ -1,1 +1,91 @@
-module.exports=function(t){var n=function(t){var n,a,o,c=t.toHex(),r=t.alpha(),e=c.split(""),i=e[1],h=e[2],s=e[3],u=e[4],l=e[5],p=e[6],f=e[7],g=e[8];if(r>0&&r<1&&(n=parseInt(f+g,16)/255,void 0===(a=2)&&(a=0),void 0===o&&(o=Math.pow(10,a)),Math.round(o*n)/o+0!==r))return null;if(i===h&&s===u&&l===p){if(1===r)return"#"+i+s+l;if(f===g)return"#"+i+s+l+f}return c},a=function(t){return t>0&&t<1?t.toString().replace("0.","."):t};t.prototype.minify=function(t){void 0===t&&(t={});var o=this.toRgb(),c=a(o.r),r=a(o.g),e=a(o.b),i=this.toHsl(),h=a(i.h),s=a(i.s),u=a(i.l),l=a(this.alpha()),p=Object.assign({hex:!0,rgb:!0,hsl:!0},t),f=[];if(p.hex&&(1===l||p.alphaHex)){var g=n(this);g&&f.push(g)}if(p.rgb&&f.push(1===l?"rgb(".concat(c,",").concat(r,",").concat(e,")"):"rgba(".concat(c,",").concat(r,",").concat(e,",").concat(l,")")),p.hsl&&f.push(1===l?"hsl(".concat(h,",").concat(s,"%,").concat(u,"%)"):"hsla(".concat(h,",").concat(s,"%,").concat(u,"%,").concat(l,")")),p.transparent&&0===c&&0===r&&0===e&&0===l)f.push("transparent");else if(1===l&&p.name&&"function"==typeof this.toName){var v=this.toName();v&&f.push(v)}return function(t){for(var n=t[0],a=1;a<t.length;a++)t[a].length<n.length&&(n=t[a]);return n}(f)}};
+const round = (number, digits = 0, base = Math.pow(10, digits)) => {
+    return Math.round(base * number) / base + 0;
+};
+
+/**
+ * A plugin adding a color minification utilities.
+ */
+const minifyPlugin = (ColordClass) => {
+    // Finds the shortest hex representation
+    const minifyHex = (instance) => {
+        const hex = instance.toHex();
+        const alpha = instance.alpha();
+        const [, r1, r2, g1, g2, b1, b2, a1, a2] = hex.split("");
+        // Make sure conversion is lossless
+        if (alpha > 0 && alpha < 1 && round(parseInt(a1 + a2, 16) / 255, 2) !== alpha)
+            return null;
+        // Check if the string can be shorten
+        if (r1 === r2 && g1 === g2 && b1 === b2) {
+            if (alpha === 1) {
+                // Express as 3 digit hexadecimal string if the color doesn't have an alpha channel
+                return "#" + r1 + g1 + b1;
+            }
+            else if (a1 === a2) {
+                // Format 4 digit hex
+                return "#" + r1 + g1 + b1 + a1;
+            }
+        }
+        return hex;
+    };
+    // Returns the shortest string in array
+    const findShortestString = (variants) => {
+        let shortest = variants[0];
+        for (let index = 1; index < variants.length; index++) {
+            if (variants[index].length < shortest.length)
+                shortest = variants[index];
+        }
+        return shortest;
+    };
+    // Removes leading zero before floating point if necessary
+    const shortenNumber = (number) => {
+        if (number > 0 && number < 1)
+            return number.toString().replace("0.", ".");
+        return number;
+    };
+    // Define new public method
+    ColordClass.prototype.minify = function (options = {}) {
+        const rgb = this.toRgb();
+        const r = shortenNumber(rgb.r);
+        const g = shortenNumber(rgb.g);
+        const b = shortenNumber(rgb.b);
+        const hsl = this.toHsl();
+        const h = shortenNumber(hsl.h);
+        const s = shortenNumber(hsl.s);
+        const l = shortenNumber(hsl.l);
+        const a = shortenNumber(this.alpha());
+        const defaults = {
+            hex: true,
+            rgb: true,
+            hsl: true,
+        };
+        const settings = Object.assign(defaults, options);
+        const variants = [];
+        // #rrggbb, #rrggbbaa, #rgb or #rgba
+        if (settings.hex && (a === 1 || settings.alphaHex)) {
+            const hex = minifyHex(this);
+            if (hex)
+                variants.push(hex);
+        }
+        // rgb() functional notation with no spaces
+        if (settings.rgb) {
+            variants.push(a === 1 ? `rgb(${r},${g},${b})` : `rgba(${r},${g},${b},${a})`);
+        }
+        // hsl() functional notation with no spaces
+        if (settings.hsl) {
+            variants.push(a === 1 ? `hsl(${h},${s}%,${l}%)` : `hsla(${h},${s}%,${l}%,${a})`);
+        }
+        if (settings.transparent && r === 0 && g === 0 && b === 0 && a === 0) {
+            // Convert to transparent keyword if this option is enabled
+            variants.push("transparent");
+        }
+        else if (a === 1 && settings.name && typeof this.toName === "function") {
+            // CSS color keyword if "names" plugin is installed
+            const name = this.toName();
+            if (name)
+                variants.push(name);
+        }
+        return findShortestString(variants);
+    };
+};
+
+export { minifyPlugin as default };

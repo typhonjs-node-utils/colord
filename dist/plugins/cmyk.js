@@ -1,1 +1,133 @@
-var n=function(n){return"string"==typeof n?n.length>0:"number"==typeof n},r=function(n,r,t){return void 0===r&&(r=0),void 0===t&&(t=Math.pow(10,r)),Math.round(t*n)/t+0},t=function(n,r,t){return void 0===r&&(r=0),void 0===t&&(t=1),n>t?t:n>r?n:r},c=function(n){return{c:t(n.c,0,100),m:t(n.m,0,100),y:t(n.y,0,100),k:t(n.k,0,100),a:t(n.a)}},o=function(n,t){return void 0===t&&(t=2),{c:r(n.c,t),m:r(n.m,t),y:r(n.y,t),k:r(n.k,t),a:r(n.a,3>t?3:t)}};function u(n){return{r:r(255*(1-n.c/100)*(1-n.k/100)),g:r(255*(1-n.m/100)*(1-n.k/100)),b:r(255*(1-n.y/100)*(1-n.k/100)),a:n.a}}function e(n){var t=1-Math.max(n.r/255,n.g/255,n.b/255),c=(1-n.r/255-t)/(1-t),o=(1-n.g/255-t)/(1-t),u=(1-n.b/255-t)/(1-t);return{c:isNaN(c)?0:r(100*c),m:isNaN(o)?0:r(100*o),y:isNaN(u)?0:r(100*u),k:r(100*t),a:n.a}}function a(r){var t=r.c,o=r.m,e=r.y,a=r.k,i=r.a,m=void 0===i?1:i;return n(t)&&n(o)&&n(e)&&n(a)?u(c({c:Number(t),m:Number(o),y:Number(e),k:Number(a),a:Number(m)})):null}var i=/^device-cmyk\(\s*([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i,m=function(n){var r=i.exec(n);return r?u(c({c:Number(r[1])*(r[2]?1:100),m:Number(r[3])*(r[4]?1:100),y:Number(r[5])*(r[6]?1:100),k:Number(r[7])*(r[8]?1:100),a:void 0===r[9]?1:Number(r[9])/(r[10]?100:1)})):null};module.exports=function(n,r){n.prototype.toCmyk=function(n){return void 0===n&&(n=0),o(e(this.rgba),n)},n.prototype.toCmykString=function(n){return void 0===n&&(n=2),function(n,r){void 0===r&&(r=2);var t=o(e(n),r),c=t.c,u=t.m,a=t.y,i=t.k,m=t.a;return m<1?"device-cmyk(".concat(c,"% ").concat(u,"% ").concat(a,"% ").concat(i,"% / ").concat(m,")"):"device-cmyk(".concat(c,"% ").concat(u,"% ").concat(a,"% ").concat(i,"%)")}(this.rgba,n)},r.object.push([a,"cmyk"]),r.string.push([m,"cmyk"])};
+/**
+ * We used to work with 2 digits after the decimal point, but it wasn't accurate enough,
+ * so the library produced colors that were perceived differently.
+ */
+const ALPHA_PRECISION = 3;
+
+const isPresent = (value) => {
+    if (typeof value === "string")
+        return value.length > 0;
+    if (typeof value === "number")
+        return true;
+    return false;
+};
+const round = (number, digits = 0, base = Math.pow(10, digits)) => {
+    return Math.round(base * number) / base + 0;
+};
+/**
+ * Clamps a value between an upper and lower bound.
+ * We use ternary operators because it makes the minified code
+ * is 2 times shorter then `Math.min(Math.max(a,b),c)`
+ * NaN is clamped to the lower bound
+ */
+const clamp = (number, min = 0, max = 1) => {
+    return number > max ? max : number > min ? number : min;
+};
+
+/**
+ * Clamps the CMYK color object values.
+ */
+const clampCmyka = (cmyka) => ({
+    c: clamp(cmyka.c, 0, 100),
+    m: clamp(cmyka.m, 0, 100),
+    y: clamp(cmyka.y, 0, 100),
+    k: clamp(cmyka.k, 0, 100),
+    a: clamp(cmyka.a),
+});
+/**
+ * Rounds the CMYK color object values.
+ */
+const roundCmyka = (cmyka, digits = 2) => ({
+    c: round(cmyka.c, digits),
+    m: round(cmyka.m, digits),
+    y: round(cmyka.y, digits),
+    k: round(cmyka.k, digits),
+    a: round(cmyka.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
+});
+/**
+ * Transforms the CMYK color object to RGB.
+ * https://www.rapidtables.com/convert/color/cmyk-to-rgb.html
+ */
+function cmykaToRgba(cmyka) {
+    return {
+        r: round(255 * (1 - cmyka.c / 100) * (1 - cmyka.k / 100)),
+        g: round(255 * (1 - cmyka.m / 100) * (1 - cmyka.k / 100)),
+        b: round(255 * (1 - cmyka.y / 100) * (1 - cmyka.k / 100)),
+        a: cmyka.a,
+    };
+}
+/**
+ * Convert RGB Color Model object to CMYK.
+ * https://www.rapidtables.com/convert/color/rgb-to-cmyk.html
+ */
+function rgbaToCmyka(rgba) {
+    const k = 1 - Math.max(rgba.r / 255, rgba.g / 255, rgba.b / 255);
+    const c = (1 - rgba.r / 255 - k) / (1 - k);
+    const m = (1 - rgba.g / 255 - k) / (1 - k);
+    const y = (1 - rgba.b / 255 - k) / (1 - k);
+    return {
+        c: isNaN(c) ? 0 : round(c * 100),
+        m: isNaN(m) ? 0 : round(m * 100),
+        y: isNaN(y) ? 0 : round(y * 100),
+        k: round(k * 100),
+        a: rgba.a,
+    };
+}
+/**
+ * Parses the CMYK color object into RGB.
+ */
+function parseCmyka({ c, m, y, k, a = 1 }) {
+    if (!isPresent(c) || !isPresent(m) || !isPresent(y) || !isPresent(k))
+        return null;
+    const cmyk = clampCmyka({
+        c: Number(c),
+        m: Number(m),
+        y: Number(y),
+        k: Number(k),
+        a: Number(a),
+    });
+    return cmykaToRgba(cmyk);
+}
+
+const cmykMatcher = /^device-cmyk\(\s*([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+/**
+ * Parses a valid CMYK CSS color function/string
+ * https://www.w3.org/TR/css-color-4/#device-cmyk
+ */
+const parseCmykaString = (input) => {
+    const match = cmykMatcher.exec(input);
+    if (!match)
+        return null;
+    const cmyka = clampCmyka({
+        c: Number(match[1]) * (match[2] ? 1 : 100),
+        m: Number(match[3]) * (match[4] ? 1 : 100),
+        y: Number(match[5]) * (match[6] ? 1 : 100),
+        k: Number(match[7]) * (match[8] ? 1 : 100),
+        a: match[9] === undefined ? 1 : Number(match[9]) / (match[10] ? 100 : 1),
+    });
+    return cmykaToRgba(cmyka);
+};
+function rgbaToCmykaString(rgb, digits = 2) {
+    const { c, m, y, k, a } = roundCmyka(rgbaToCmyka(rgb), digits);
+    return a < 1
+        ? `device-cmyk(${c}% ${m}% ${y}% ${k}% / ${a})`
+        : `device-cmyk(${c}% ${m}% ${y}% ${k}%)`;
+}
+
+/**
+ * A plugin adding support for CMYK color space.
+ * https://lea.verou.me/2009/03/cmyk-colors-in-css-useful-or-useless/
+ * https://en.wikipedia.org/wiki/CMYK_color_model
+ */
+const cmykPlugin = (ColordClass, parsers) => {
+    ColordClass.prototype.toCmyk = function (digits = 0) {
+        return roundCmyka(rgbaToCmyka(this.rgba), digits);
+    };
+    ColordClass.prototype.toCmykString = function (digits = 2) {
+        return rgbaToCmykaString(this.rgba, digits);
+    };
+    parsers.object.push([parseCmyka, "cmyk"]);
+    parsers.string.push([parseCmykaString, "cmyk"]);
+};
+
+export { cmykPlugin as default };

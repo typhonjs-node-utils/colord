@@ -1,1 +1,143 @@
-var r=function(r){return"string"==typeof r?r.length>0:"number"==typeof r},n=function(r,n,t){return void 0===n&&(n=0),void 0===t&&(t=Math.pow(10,n)),Math.round(t*r)/t+0},t=function(r,n,t){return void 0===n&&(n=0),void 0===t&&(t=1),r>t?t:r>n?r:n},u=function(r){var n=r/255;return n<.04045?n/12.92:Math.pow((n+.055)/1.055,2.4)},o=function(r){return 255*(r>.0031308?1.055*Math.pow(r,1/2.4)-.055:12.92*r)},a=96.422,e=100,y=82.521,i=function(r){return{x:t(r.x,0,a),y:t(r.y,0,e),z:t(r.z,0,y),a:t(r.a)}},x=function(n){var t=n.x,u=n.y,o=n.z,a=n.a,e=void 0===a?1:a;if(!r(t)||!r(u)||!r(o))return null;var y=i({x:Number(t),y:Number(u),z:Number(o),a:Number(e)});return z(y)},z=function(r){var n,u,a={x:.9555766*(n=r).x+-.0230393*n.y+.0631636*n.z,y:-.0282895*n.x+1.0099416*n.y+.0210077*n.z,z:.0122982*n.x+-.020483*n.y+1.3299098*n.z};return u={r:o(.032404542*a.x-.015371385*a.y-.004985314*a.z),g:o(-.00969266*a.x+.018760108*a.y+41556e-8*a.z),b:o(556434e-9*a.x-.002040259*a.y+.010572252*a.z),a:r.a},{r:t(u.r,0,255),g:t(u.g,0,255),b:t(u.b,0,255),a:t(u.a)}};module.exports=function(r,t){r.prototype.toXyz=function(r){return void 0===r&&(r=2),function(r,t){return void 0===t&&(t=2),{x:n(r.x,t),y:n(r.y,t),z:n(r.z,t),a:n(r.a,3>t?3:t)}}((o=u((t=this.rgba).r),a=u(t.g),e=u(t.b),i({x:1.0478112*(y={x:100*(.4124564*o+.3575761*a+.1804375*e),y:100*(.2126729*o+.7151522*a+.072175*e),z:100*(.0193339*o+.119192*a+.9503041*e),a:t.a}).x+.0228866*y.y+-.050127*y.z,y:.0295424*y.x+.9904844*y.y+-.0170491*y.z,z:-.0092345*y.x+.0150436*y.y+.7521316*y.z,a:y.a})),r);var t,o,a,e,y},t.object.push([x,"xyz"])};
+/**
+ * We used to work with 2 digits after the decimal point, but it wasn't accurate enough,
+ * so the library produced colors that were perceived differently.
+ */
+const ALPHA_PRECISION = 3;
+
+const isPresent = (value) => {
+    if (typeof value === "string")
+        return value.length > 0;
+    if (typeof value === "number")
+        return true;
+    return false;
+};
+const round = (number, digits = 0, base = Math.pow(10, digits)) => {
+    return Math.round(base * number) / base + 0;
+};
+/**
+ * Clamps a value between an upper and lower bound.
+ * We use ternary operators because it makes the minified code
+ * is 2 times shorter then `Math.min(Math.max(a,b),c)`
+ * NaN is clamped to the lower bound
+ */
+const clamp = (number, min = 0, max = 1) => {
+    return number > max ? max : number > min ? number : min;
+};
+
+const clampRgba = (rgba) => ({
+    r: clamp(rgba.r, 0, 255),
+    g: clamp(rgba.g, 0, 255),
+    b: clamp(rgba.b, 0, 255),
+    a: clamp(rgba.a),
+});
+/**
+ * Converts an RGB channel [0-255] to its linear light (un-companded) form [0-1].
+ * Linearized RGB values are widely used for color space conversions and contrast calculations
+ */
+const linearizeRgbChannel = (value) => {
+    const ratio = value / 255;
+    return ratio < 0.04045 ? ratio / 12.92 : Math.pow((ratio + 0.055) / 1.055, 2.4);
+};
+/**
+ * Converts an linear-light sRGB channel [0-1] back to its gamma corrected form [0-255]
+ */
+const unlinearizeRgbChannel = (ratio) => {
+    const value = ratio > 0.0031308 ? 1.055 * Math.pow(ratio, 1 / 2.4) - 0.055 : 12.92 * ratio;
+    return value * 255;
+};
+
+// Theoretical light source that approximates "warm daylight" and follows the CIE standard.
+// https://en.wikipedia.org/wiki/Standard_illuminant
+const D50 = {
+    x: 96.422,
+    y: 100,
+    z: 82.521,
+};
+/**
+ * Limits XYZ axis values assuming XYZ is relative to D50.
+ */
+const clampXyza = (xyza) => ({
+    x: clamp(xyza.x, 0, D50.x),
+    y: clamp(xyza.y, 0, D50.y),
+    z: clamp(xyza.z, 0, D50.z),
+    a: clamp(xyza.a),
+});
+const roundXyza = (xyza, digits = 2) => ({
+    x: round(xyza.x, digits),
+    y: round(xyza.y, digits),
+    z: round(xyza.z, digits),
+    a: round(xyza.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
+});
+const parseXyza = ({ x, y, z, a = 1 }) => {
+    if (!isPresent(x) || !isPresent(y) || !isPresent(z))
+        return null;
+    const xyza = clampXyza({
+        x: Number(x),
+        y: Number(y),
+        z: Number(z),
+        a: Number(a),
+    });
+    return xyzaToRgba(xyza);
+};
+/**
+ * Performs Bradford chromatic adaptation from D65 to D50
+ */
+const adaptXyzaToD50 = (xyza) => ({
+    x: xyza.x * 1.0478112 + xyza.y * 0.0228866 + xyza.z * -0.050127,
+    y: xyza.x * 0.0295424 + xyza.y * 0.9904844 + xyza.z * -0.0170491,
+    z: xyza.x * -0.0092345 + xyza.y * 0.0150436 + xyza.z * 0.7521316,
+    a: xyza.a,
+});
+/**
+ * Performs Bradford chromatic adaptation from D50 to D65
+ */
+const adaptXyzToD65 = (xyza) => ({
+    x: xyza.x * 0.9555766 + xyza.y * -0.0230393 + xyza.z * 0.0631636,
+    y: xyza.x * -0.0282895 + xyza.y * 1.0099416 + xyza.z * 0.0210077,
+    z: xyza.x * 0.0122982 + xyza.y * -0.020483 + xyza.z * 1.3299098,
+});
+/**
+ * Converts an CIE XYZ color (D50) to RGBA color space (D65)
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ */
+const xyzaToRgba = (sourceXyza) => {
+    const xyz = adaptXyzToD65(sourceXyza);
+    return clampRgba({
+        r: unlinearizeRgbChannel(0.032404542 * xyz.x - 0.015371385 * xyz.y - 0.004985314 * xyz.z),
+        g: unlinearizeRgbChannel(-0.00969266 * xyz.x + 0.018760108 * xyz.y + 0.00041556 * xyz.z),
+        b: unlinearizeRgbChannel(0.000556434 * xyz.x - 0.002040259 * xyz.y + 0.010572252 * xyz.z),
+        a: sourceXyza.a,
+    });
+};
+/**
+ * Converts an RGB color (D65) to CIE XYZ (D50)
+ * https://image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz
+ */
+const rgbaToXyza = (rgba) => {
+    const sRed = linearizeRgbChannel(rgba.r);
+    const sGreen = linearizeRgbChannel(rgba.g);
+    const sBlue = linearizeRgbChannel(rgba.b);
+    // Convert an array of linear-light sRGB values to CIE XYZ
+    // using sRGB own white (D65 no chromatic adaptation)
+    const xyza = {
+        x: (sRed * 0.4124564 + sGreen * 0.3575761 + sBlue * 0.1804375) * 100,
+        y: (sRed * 0.2126729 + sGreen * 0.7151522 + sBlue * 0.072175) * 100,
+        z: (sRed * 0.0193339 + sGreen * 0.119192 + sBlue * 0.9503041) * 100,
+        a: rgba.a,
+    };
+    return clampXyza(adaptXyzaToD50(xyza));
+};
+
+/**
+ * A plugin adding support for CIE XYZ colorspace.
+ * Wikipedia: https://en.wikipedia.org/wiki/CIE_1931_color_space
+ * Helpful article: https://www.sttmedia.com/colormodel-xyz
+ */
+const xyzPlugin = (ColordClass, parsers) => {
+    ColordClass.prototype.toXyz = function (digits = 2) {
+        return roundXyza(rgbaToXyza(this.rgba), digits);
+    };
+    parsers.object.push([parseXyza, "xyz"]);
+};
+
+export { xyzPlugin as default };

@@ -1,1 +1,275 @@
-var t={grad:.9,turn:360,rad:360/(2*Math.PI)},r=function(t){return"string"==typeof t?t.length>0:"number"==typeof t},a=function(t,r,a){return void 0===r&&(r=0),void 0===a&&(a=Math.pow(10,r)),Math.round(a*t)/a+0},n=function(t,r,a){return void 0===r&&(r=0),void 0===a&&(a=1),t>a?a:t>r?t:r},o=function(t){var r=t/255;return r<.04045?r/12.92:Math.pow((r+.055)/1.055,2.4)},c=function(t){return 255*(t>.0031308?1.055*Math.pow(t,1/2.4)-.055:12.92*t)},u=96.422,h=100,e=82.521,i=function(t){var r,a,o={x:.9555766*(r=t).x+-.0230393*r.y+.0631636*r.z,y:-.0282895*r.x+1.0099416*r.y+.0210077*r.z,z:.0122982*r.x+-.020483*r.y+1.3299098*r.z};return a={r:c(.032404542*o.x-.015371385*o.y-.004985314*o.z),g:c(-.00969266*o.x+.018760108*o.y+41556e-8*o.z),b:c(556434e-9*o.x-.002040259*o.y+.010572252*o.z),a:t.a},{r:n(a.r,0,255),g:n(a.g,0,255),b:n(a.b,0,255),a:n(a.a)}},l=function(t){var r=o(t.r),a=o(t.g),c=o(t.b);return function(t){return{x:n(t.x,0,u),y:n(t.y,0,h),z:n(t.z,0,e),a:n(t.a)}}(function(t){return{x:1.0478112*t.x+.0228866*t.y+-.050127*t.z,y:.0295424*t.x+.9904844*t.y+-.0170491*t.z,z:-.0092345*t.x+.0150436*t.y+.7521316*t.z,a:t.a}}({x:100*(.4124564*r+.3575761*a+.1804375*c),y:100*(.2126729*r+.7151522*a+.072175*c),z:100*(.0193339*r+.119192*a+.9503041*c),a:t.a}))},d=216/24389,f=24389/27,v=function(t){return{l:n(t.l,0,100),c:t.c,h:(r=t.h,(r=isFinite(r)?r%360:0)>0?r:r+360),a:t.a};var r},b=function(t,r){return void 0===r&&(r=2),{l:a(t.l,r),c:a(t.c,r),h:a(t.h,r),a:a(t.a,3>r?3:r)}},p=function(t){var a=t.l,n=t.c,o=t.h,c=t.a,u=void 0===c?1:c;if(!r(a)||!r(n)||!r(o))return null;var h=v({l:Number(a),c:Number(n),h:Number(o),a:Number(u)});return M(h)},y=function(t){var r=function(t){var r=l(t),a=r.x/u,n=r.y/h,o=r.z/e;return a=a>d?Math.cbrt(a):(f*a+16)/116,{l:116*(n=n>d?Math.cbrt(n):(f*n+16)/116)-16,a:500*(a-n),b:200*(n-(o=o>d?Math.cbrt(o):(f*o+16)/116)),alpha:r.a}}(t),n=a(r.a,3),o=a(r.b,3),c=Math.atan2(o,n)/Math.PI*180;return{l:r.l,c:Math.sqrt(n*n+o*o),h:c<0?c+360:c,a:r.alpha}},M=function(t){return r={l:t.l,a:t.c*Math.cos(t.h*Math.PI/180),b:t.c*Math.sin(t.h*Math.PI/180),alpha:t.a},n=r.a/500+(a=(r.l+16)/116),o=a-r.b/200,i({x:(Math.pow(n,3)>d?Math.pow(n,3):(116*n-16)/f)*u,y:(r.l>8?Math.pow((r.l+16)/116,3):r.l/f)*h,z:(Math.pow(o,3)>d?Math.pow(o,3):(116*o-16)/f)*e,a:r.alpha});var r,a,n,o},x=/^lch\(\s*([+-]?\d*\.?\d+)%\s+([+-]?\d*\.?\d+)\s+([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i,s=function(r){var a=x.exec(r);if(!a)return null;var n,o,c=v({l:Number(a[1]),c:Number(a[2]),h:(n=a[3],o=a[4],void 0===o&&(o="deg"),Number(n)*(t[o]||1)),a:void 0===a[5]?1:Number(a[5])/(a[6]?100:1)});return M(c)};module.exports=function(t,r){t.prototype.toLch=function(t){return void 0===t&&(t=2),b(y(this.rgba),t)},t.prototype.toLchString=function(t){return void 0===t&&(t=2),function(t,r){void 0===r&&(r=2);var a=b(y(t),r),n=a.l,o=a.c,c=a.h,u=a.a;return u<1?"lch(".concat(n,"% ").concat(o," ").concat(c," / ").concat(u,")"):"lch(".concat(n,"% ").concat(o," ").concat(c,")")}(this.rgba,t)},r.string.push([s,"lch"]),r.object.push([p,"lch"])};
+/**
+ * We used to work with 2 digits after the decimal point, but it wasn't accurate enough,
+ * so the library produced colors that were perceived differently.
+ */
+const ALPHA_PRECISION = 3;
+/**
+ * Valid CSS <angle> units.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/angle
+ */
+const ANGLE_UNITS = {
+    grad: 360 / 400,
+    turn: 360,
+    rad: 360 / (Math.PI * 2),
+};
+
+const isPresent = (value) => {
+    if (typeof value === "string")
+        return value.length > 0;
+    if (typeof value === "number")
+        return true;
+    return false;
+};
+const round = (number, digits = 0, base = Math.pow(10, digits)) => {
+    return Math.round(base * number) / base + 0;
+};
+/**
+ * Clamps a value between an upper and lower bound.
+ * We use ternary operators because it makes the minified code
+ * is 2 times shorter then `Math.min(Math.max(a,b),c)`
+ * NaN is clamped to the lower bound
+ */
+const clamp = (number, min = 0, max = 1) => {
+    return number > max ? max : number > min ? number : min;
+};
+/**
+ * Processes and clamps a degree (angle) value properly.
+ * Any `NaN` or `Infinity` will be converted to `0`.
+ * Examples: -1 => 359, 361 => 1
+ */
+const clampHue = (degrees) => {
+    degrees = isFinite(degrees) ? degrees % 360 : 0;
+    return degrees > 0 ? degrees : degrees + 360;
+};
+/**
+ * Converts a hue value to degrees from 0 to 360 inclusive.
+ */
+const parseHue = (value, unit = "deg") => {
+    return Number(value) * (ANGLE_UNITS[unit] || 1);
+};
+
+const clampRgba = (rgba) => ({
+    r: clamp(rgba.r, 0, 255),
+    g: clamp(rgba.g, 0, 255),
+    b: clamp(rgba.b, 0, 255),
+    a: clamp(rgba.a),
+});
+/**
+ * Converts an RGB channel [0-255] to its linear light (un-companded) form [0-1].
+ * Linearized RGB values are widely used for color space conversions and contrast calculations
+ */
+const linearizeRgbChannel = (value) => {
+    const ratio = value / 255;
+    return ratio < 0.04045 ? ratio / 12.92 : Math.pow((ratio + 0.055) / 1.055, 2.4);
+};
+/**
+ * Converts an linear-light sRGB channel [0-1] back to its gamma corrected form [0-255]
+ */
+const unlinearizeRgbChannel = (ratio) => {
+    const value = ratio > 0.0031308 ? 1.055 * Math.pow(ratio, 1 / 2.4) - 0.055 : 12.92 * ratio;
+    return value * 255;
+};
+
+// Theoretical light source that approximates "warm daylight" and follows the CIE standard.
+// https://en.wikipedia.org/wiki/Standard_illuminant
+const D50 = {
+    x: 96.422,
+    y: 100,
+    z: 82.521,
+};
+/**
+ * Limits XYZ axis values assuming XYZ is relative to D50.
+ */
+const clampXyza = (xyza) => ({
+    x: clamp(xyza.x, 0, D50.x),
+    y: clamp(xyza.y, 0, D50.y),
+    z: clamp(xyza.z, 0, D50.z),
+    a: clamp(xyza.a),
+});
+/**
+ * Performs Bradford chromatic adaptation from D65 to D50
+ */
+const adaptXyzaToD50 = (xyza) => ({
+    x: xyza.x * 1.0478112 + xyza.y * 0.0228866 + xyza.z * -0.050127,
+    y: xyza.x * 0.0295424 + xyza.y * 0.9904844 + xyza.z * -0.0170491,
+    z: xyza.x * -0.0092345 + xyza.y * 0.0150436 + xyza.z * 0.7521316,
+    a: xyza.a,
+});
+/**
+ * Performs Bradford chromatic adaptation from D50 to D65
+ */
+const adaptXyzToD65 = (xyza) => ({
+    x: xyza.x * 0.9555766 + xyza.y * -0.0230393 + xyza.z * 0.0631636,
+    y: xyza.x * -0.0282895 + xyza.y * 1.0099416 + xyza.z * 0.0210077,
+    z: xyza.x * 0.0122982 + xyza.y * -0.020483 + xyza.z * 1.3299098,
+});
+/**
+ * Converts an CIE XYZ color (D50) to RGBA color space (D65)
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ */
+const xyzaToRgba = (sourceXyza) => {
+    const xyz = adaptXyzToD65(sourceXyza);
+    return clampRgba({
+        r: unlinearizeRgbChannel(0.032404542 * xyz.x - 0.015371385 * xyz.y - 0.004985314 * xyz.z),
+        g: unlinearizeRgbChannel(-0.00969266 * xyz.x + 0.018760108 * xyz.y + 0.00041556 * xyz.z),
+        b: unlinearizeRgbChannel(0.000556434 * xyz.x - 0.002040259 * xyz.y + 0.010572252 * xyz.z),
+        a: sourceXyza.a,
+    });
+};
+/**
+ * Converts an RGB color (D65) to CIE XYZ (D50)
+ * https://image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz
+ */
+const rgbaToXyza = (rgba) => {
+    const sRed = linearizeRgbChannel(rgba.r);
+    const sGreen = linearizeRgbChannel(rgba.g);
+    const sBlue = linearizeRgbChannel(rgba.b);
+    // Convert an array of linear-light sRGB values to CIE XYZ
+    // using sRGB own white (D65 no chromatic adaptation)
+    const xyza = {
+        x: (sRed * 0.4124564 + sGreen * 0.3575761 + sBlue * 0.1804375) * 100,
+        y: (sRed * 0.2126729 + sGreen * 0.7151522 + sBlue * 0.072175) * 100,
+        z: (sRed * 0.0193339 + sGreen * 0.119192 + sBlue * 0.9503041) * 100,
+        a: rgba.a,
+    };
+    return clampXyza(adaptXyzaToD50(xyza));
+};
+
+// Conversion factors from https://en.wikipedia.org/wiki/CIELAB_color_space
+const e = 216 / 24389;
+const k = 24389 / 27;
+/**
+ * Performs RGB → CIEXYZ → LAB color conversion
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ */
+const rgbaToLaba = (rgba) => {
+    // Compute XYZ scaled relative to D50 reference white
+    const xyza = rgbaToXyza(rgba);
+    let x = xyza.x / D50.x;
+    let y = xyza.y / D50.y;
+    let z = xyza.z / D50.z;
+    x = x > e ? Math.cbrt(x) : (k * x + 16) / 116;
+    y = y > e ? Math.cbrt(y) : (k * y + 16) / 116;
+    z = z > e ? Math.cbrt(z) : (k * z + 16) / 116;
+    return {
+        l: 116 * y - 16,
+        a: 500 * (x - y),
+        b: 200 * (y - z),
+        alpha: xyza.a,
+    };
+};
+/**
+ * Performs LAB → CIEXYZ → RGB color conversion
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ */
+const labaToRgba = (laba) => {
+    const y = (laba.l + 16) / 116;
+    const x = laba.a / 500 + y;
+    const z = y - laba.b / 200;
+    return xyzaToRgba({
+        x: (Math.pow(x, 3) > e ? Math.pow(x, 3) : (116 * x - 16) / k) * D50.x,
+        y: (laba.l > k * e ? Math.pow((laba.l + 16) / 116, 3) : laba.l / k) * D50.y,
+        z: (Math.pow(z, 3) > e ? Math.pow(z, 3) : (116 * z - 16) / k) * D50.z,
+        a: laba.alpha,
+    });
+};
+
+/**
+ * Limits LCH axis values.
+ * https://www.w3.org/TR/css-color-4/#specifying-lab-lch
+ * https://lea.verou.me/2020/04/lch-colors-in-css-what-why-and-how/#how-does-lch-work
+ */
+const clampLcha = (laba) => ({
+    l: clamp(laba.l, 0, 100),
+    c: laba.c,
+    h: clampHue(laba.h),
+    a: laba.a,
+});
+const roundLcha = (laba, digits = 2) => ({
+    l: round(laba.l, digits),
+    c: round(laba.c, digits),
+    h: round(laba.h, digits),
+    a: round(laba.a, ALPHA_PRECISION > digits ? ALPHA_PRECISION : digits),
+});
+const parseLcha = ({ l, c, h, a = 1 }) => {
+    if (!isPresent(l) || !isPresent(c) || !isPresent(h))
+        return null;
+    const lcha = clampLcha({
+        l: Number(l),
+        c: Number(c),
+        h: Number(h),
+        a: Number(a),
+    });
+    return lchaToRgba(lcha);
+};
+/**
+ * Performs RGB → CIEXYZ → CIELAB → CIELCH color conversion
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ */
+const rgbaToLcha = (rgba) => {
+    const laba = rgbaToLaba(rgba);
+    // Round axis values to get proper values for grayscale colors
+    const a = round(laba.a, 3);
+    const b = round(laba.b, 3);
+    const hue = 180 * (Math.atan2(b, a) / Math.PI);
+    return {
+        l: laba.l,
+        c: Math.sqrt(a * a + b * b),
+        h: hue < 0 ? hue + 360 : hue,
+        a: laba.alpha,
+    };
+};
+/**
+ * Performs CIELCH → CIELAB → CIEXYZ → RGB color conversion
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ */
+const lchaToRgba = (lcha) => {
+    return labaToRgba({
+        l: lcha.l,
+        a: lcha.c * Math.cos((lcha.h * Math.PI) / 180),
+        b: lcha.c * Math.sin((lcha.h * Math.PI) / 180),
+        alpha: lcha.a,
+    });
+};
+
+// The only valid LCH syntax
+// lch() = lch( <percentage> <number> <hue> [ / <alpha-value> ]? )
+const lchaMatcher = /^lch\(\s*([+-]?\d*\.?\d+)%\s+([+-]?\d*\.?\d+)\s+([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+/**
+ * Parses a valid LCH CSS color function/string
+ * https://www.w3.org/TR/css-color-4/#specifying-lab-lch
+ */
+const parseLchaString = (input) => {
+    const match = lchaMatcher.exec(input);
+    if (!match)
+        return null;
+    const lcha = clampLcha({
+        l: Number(match[1]),
+        c: Number(match[2]),
+        h: parseHue(match[3], match[4]),
+        a: match[5] === undefined ? 1 : Number(match[5]) / (match[6] ? 100 : 1),
+    });
+    return lchaToRgba(lcha);
+};
+const rgbaToLchaString = (rgba, digits = 2) => {
+    const { l, c, h, a } = roundLcha(rgbaToLcha(rgba), digits);
+    return a < 1 ? `lch(${l}% ${c} ${h} / ${a})` : `lch(${l}% ${c} ${h})`;
+};
+
+/**
+ * A plugin adding support for CIELCH color space.
+ * https://lea.verou.me/2020/04/lch-colors-in-css-what-why-and-how/
+ * https://en.wikipedia.org/wiki/CIELAB_color_space#Cylindrical_model
+ */
+const lchPlugin = (ColordClass, parsers) => {
+    ColordClass.prototype.toLch = function (digits = 2) {
+        return roundLcha(rgbaToLcha(this.rgba), digits);
+    };
+    ColordClass.prototype.toLchString = function (digits = 2) {
+        return rgbaToLchaString(this.rgba, digits);
+    };
+    parsers.string.push([parseLchaString, "lch"]);
+    parsers.object.push([parseLcha, "lch"]);
+};
+
+export { lchPlugin as default };
