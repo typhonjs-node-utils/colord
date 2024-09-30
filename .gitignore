@@ -1,4 +1,5 @@
 # NPM
+.dts/
 npm-debug.log*
 node_modules/
 .npm

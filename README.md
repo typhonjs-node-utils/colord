@@ -26,6 +26,11 @@
   <strong>Colord</strong> is a tiny yet powerful tool for high-performance color manipulations and conversions.
 </div>
 
+## NOTE:
+This is a temporary patched version of `colord` that only exports the main library and no plugins. Improvements to 
+precision handling are included, but in the near future TRL will be switching to another color library as this one is 
+not maintained.
+
 ## Features
 
 - 📦 **Small**: Just **1.7 KB** gzipped ([3x+ lighter](#benchmarks) than **color** and **tinycolor2**)

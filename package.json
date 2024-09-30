@@ -31,47 +31,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs"
-    },
-    "./plugins/a11y": {
-      "types": "./dist/plugins/a11y.d.ts",
-      "import": "./dist/plugins/a11y.mjs"
-    },
-    "./plugins/cmyk": {
-      "types": "./dist/plugins/cmyk.d.ts",
-      "import": "./dist/plugins/cmyk.mjs"
-    },
-    "./plugins/harmonies": {
-      "types": "./dist/plugins/harmonies.d.ts",
-      "import": "./dist/plugins/harmonies.mjs"
-    },
-    "./plugins/hwb": {
-      "types": "./dist/plugins/hwb.d.ts",
-      "import": "./dist/plugins/hwb.mjs"
-    },
-    "./plugins/lab": {
-      "types": "./dist/plugins/lab.d.ts",
-      "import": "./dist/plugins/lab.mjs"
-    },
-    "./plugins/lch": {
-      "types": "./dist/plugins/lch.d.ts",
-      "import": "./dist/plugins/lch.mjs"
-    },
-    "./plugins/minify": {
-      "types": "./dist/plugins/minify.d.ts",
-      "import": "./dist/plugins/minify.mjs"
-    },
-    "./plugins/mix": {
-      "types": "./dist/plugins/mix.d.ts",
-      "import": "./dist/plugins/mix.mjs"
-    },
-    "./plugins/names": {
-      "types": "./dist/plugins/names.d.ts",
-      "import": "./dist/plugins/names.mjs"
-    },
-    "./plugins/xyz": {
-      "types": "./dist/plugins/xyz.d.ts",
-      "import": "./dist/plugins/xyz.mjs"
+      "import": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -90,12 +50,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.10.1",
+    "@size-limit/preset-small-lib": "^11.1.5",
     "@types/jest": "^29.5.2",
-    "@rollup/plugin-terser": "^0.4.3",
-    "@rollup/plugin-typescript": "^11.1.2",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.0",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
+    "@typhonjs-build-test/esm-d-ts": "^0.3.0-next.8",
     "ac-colors": "^1.4.2",
     "benny": "^3.6.15",
     "chroma-js": "^2.1.1",
@@ -106,8 +67,7 @@
     "glob": "^7.1.6",
     "jest": "^29.6.0",
     "prettier": "^2.8.8",
-    "rollup": "3.26.1",
-    "rollup-plugin-dts": "^5.3.0",
+    "rollup": "4.22.5",
     "size-limit": "^4.10.1",
     "tinycolor2": "^1.4.2",
     "ts-jest": "^29.1.1",
